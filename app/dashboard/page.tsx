@@ -1,12 +1,29 @@
+'use client';
+
 import { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-
-export const metadata: Metadata = {
-  title: 'Today - InterviewOS',
-};
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Check if user is authenticated (mock auth)
+    const user = localStorage.getItem('demo-user');
+    if (!user) {
+      router.push('/auth/login');
+    } else {
+      setIsAuthenticated(true);
+    }
+  }, [router]);
+
+  if (!isAuthenticated) {
+    return <div className="min-h-screen bg-slate-50 flex items-center justify-center">Loading...</div>;
+  }
+
   const stats = [
     { label: 'Jobs Discovered', value: '12', color: 'bg-slate-100' },
     { label: 'High Priority', value: '3', color: 'bg-red-100' },
@@ -35,13 +52,11 @@ export default function DashboardPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-8">
-          {/* Hero Section */}
           <div className="space-y-3">
             <h2 className="text-4xl font-bold text-slate-900">Good morning.</h2>
             <p className="text-xl text-slate-600">Here are the opportunities worth your time today.</p>
           </div>
 
-          {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {stats.map((stat) => (
               <div key={stat.label} className={`${stat.color} rounded-lg p-6`}>
@@ -51,9 +66,7 @@ export default function DashboardPage() {
             ))}
           </div>
 
-          {/* Cards */}
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Attack Roles */}
             <div className="bg-white border border-red-200 rounded-lg p-6">
               <div className="flex items-center space-x-2 mb-4">
                 <span className="text-2xl">🔥</span>
@@ -66,10 +79,11 @@ export default function DashboardPage() {
                   <div className="text-sm text-slate-600">TechCorp · Bangalore</div>
                 </div>
               </div>
-              <Button className="w-full mt-4">View Opportunities</Button>
+              <Link href="/jobs">
+                <Button className="w-full mt-4">View Opportunities</Button>
+              </Link>
             </div>
 
-            {/* Apply Today */}
             <div className="bg-white border border-blue-200 rounded-lg p-6">
               <div className="flex items-center space-x-2 mb-4">
                 <span className="text-2xl">🟢</span>
@@ -82,10 +96,11 @@ export default function DashboardPage() {
                   <div className="text-sm text-slate-600">GlobalTech · Remote India</div>
                 </div>
               </div>
-              <Button className="w-full mt-4">Review Applications</Button>
+              <Link href="/jobs">
+                <Button className="w-full mt-4">Review Applications</Button>
+              </Link>
             </div>
 
-            {/* Referral Opportunities */}
             <div className="bg-white border border-green-200 rounded-lg p-6">
               <div className="flex items-center space-x-2 mb-4">
                 <span className="text-2xl">👥</span>
@@ -98,10 +113,11 @@ export default function DashboardPage() {
                   <div className="text-sm text-slate-600">2 possible connections</div>
                 </div>
               </div>
-              <Button className="w-full mt-4">Review Referrals</Button>
+              <Link href="/jobs">
+                <Button className="w-full mt-4">Review Referrals</Button>
+              </Link>
             </div>
 
-            {/* Follow-ups Due */}
             <div className="bg-white border border-amber-200 rounded-lg p-6">
               <div className="flex items-center space-x-2 mb-4">
                 <span className="text-2xl">📨</span>
@@ -114,11 +130,10 @@ export default function DashboardPage() {
                   <div className="text-sm text-slate-600">Sent referral request 3 days ago</div>
                 </div>
               </div>
-              <Button className="w-full mt-4">See Follow-ups</Button>
+              <Button className="w-full mt-4" variant="outline">See Follow-ups</Button>
             </div>
           </div>
 
-          {/* Jobs Avoided */}
           <div className="bg-white border border-slate-200 rounded-lg p-6">
             <div className="flex items-center space-x-2 mb-4">
               <span className="text-2xl">🚫</span>
